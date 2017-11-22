@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import './App.css';
 import {fetchAllPosts} from '../actions'
+import ListPosts from './ListPosts'
 
 class App extends Component {
   componentDidMount(){
@@ -12,8 +13,11 @@ class App extends Component {
   render() {
     console.log('App Component render')
     return (
-      <div className="App">
-
+      <div>
+        <div className="App-header">
+          <h1> Readable </h1>
+        </div>
+        <ListPosts/>
       </div>
     );
   }
