@@ -15,3 +15,7 @@
 .App-intro {
   font-size: large;
 }
+
+.posts, .categories{
+  float: left;
+}

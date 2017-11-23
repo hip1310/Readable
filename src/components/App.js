@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import './App.css';
-import {fetchAllPosts} from '../actions'
+import {fetchAllPosts, fetchCategories} from '../actions'
 import ListPosts from './ListPosts'
 
 class App extends Component {
   componentDidMount(){
     console.log('App Component componenetDidMount')
     this.props.dispatch(fetchAllPosts())
+    this.props.dispatch(fetchCategories())
   }
 
   render() {

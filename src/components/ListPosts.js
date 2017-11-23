@@ -3,28 +3,34 @@ import {connect} from 'react-redux'
 import './App.css';
 
 class ListPosts extends Component {
-  componentDidMount(){
-
-  }
-
   render() {
     console.log('ListPosts Component render')
-    const {posts} = this.props
+    const {posts, categories} = this.props
     return (
-      <div>
-        <ul>
-          {posts.map(post => (
-            <li key={post.id}>{post.title}</li>
-          ))}
-        </ul>
+      <div className='container'>
+        <div className='posts'>
+          <ul>
+            {posts.map(post => (
+              <li key={post.id}>{post.title}</li>
+            ))}
+          </ul>
+        </div>
+        <div className='categories'>
+          <ul>
+            {categories.map((category, i) => (
+              <li key={i}>{category.name}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   }
 }
 
-function mapStateToProps({posts}){
+function mapStateToProps({posts, categories}){
   return {
-    posts : posts
+    posts,
+    categories
   }
 }
 

@@ -9,3 +9,10 @@ export function getAllPosts(){
   return fetch(`${api}/posts`, { headers })
            .then(res => res.json())
 }
+
+export function getCategories(){
+  console.log('api call to getCategories')
+  return fetch(`${api}/categories`, { headers })
+           .then(res => res.json())
+           .then(data => data.categories)
+}
