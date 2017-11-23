@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import './App.css';
 import {fetchAllPosts, fetchCategories} from '../actions'
 import ListPosts from './ListPosts'
+import {Route, withRouter} from 'react-router-dom'
 
 class App extends Component {
   componentDidMount(){
@@ -15,13 +16,11 @@ class App extends Component {
     console.log('App Component render')
     return (
       <div>
-        <div className="App-header">
-          <h1> Readable </h1>
-        </div>
-        <ListPosts/>
+        <Route exact path="/" component={ListPosts}/>
+        <Route path="/:category" component={ListPosts}/>
       </div>
     );
   }
 }
 
-export default connect()(App)
+export default withRouter(connect()(App))
