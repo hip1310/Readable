@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import './App.css';
 import {Link, withRouter} from 'react-router-dom'
+import {postVoteScore} from '../actions'
 
 class ListPosts extends Component {
   state = {
@@ -23,7 +24,7 @@ class ListPosts extends Component {
   render() {
     console.log('ListPosts Component render')
 
-    const {posts, categories} = this.props
+    const {posts, categories, updateVote} = this.props
     let filteredPosts
 
     if(this.state.selectedCategory !== ''){
@@ -42,7 +43,14 @@ class ListPosts extends Component {
         <div className='posts'>
           <ul>
             {filteredPosts.map(post => (
-              <li key={post.id}>{post.title}</li>
+              <li key={post.id}>
+                <p>{post.title} - {post.author}</p>
+                <p>
+                  ------ Comments {post.commentCount} Score {post.voteScore}
+                  &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>
+                  &nbsp;<button onClick={() => updateVote(post.id, 'downVote')}>Down</button>
+                </p>
+              </li>
             ))}
           </ul>
         </div>
@@ -69,4 +77,10 @@ function mapStateToProps({posts, categories}){
   }
 }
 
-export default withRouter(connect(mapStateToProps)(ListPosts))
+function mapDispatchToProps(dispatch){
+  return{
+    updateVote : (id, option) => dispatch(postVoteScore(id, option))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListPosts))

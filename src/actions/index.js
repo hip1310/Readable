@@ -1,7 +1,12 @@
-import {getAllPosts, getCategories} from '../utils/api.js'
+import{
+  getAllPosts,
+  getCategories,
+  updateVoteScore
+} from '../utils/api.js'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
+export const UPDATE_POST = 'UPDATE_POST'
 
 export function receivePosts({posts}){
   console.log('action receivePosts invoked')
@@ -19,10 +24,22 @@ export function receiveCategories({categories}){
   }
 }
 
+export function updatePost({post}){
+  console.log('action updatePost invoked')
+  return{
+    type : UPDATE_POST,
+    post
+  }
+}
+
 export const fetchAllPosts = () => dispatch => (
   getAllPosts().then(posts => dispatch(receivePosts({posts})))
 )
 
 export const fetchCategories = () => dispatch => (
   getCategories().then(categories => dispatch(receiveCategories({categories})))
+)
+
+export const postVoteScore = (id, option) => dispatch => (
+  updateVoteScore(id, option).then(post => dispatch(updatePost({post})))
 )

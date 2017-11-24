@@ -1,16 +1,18 @@
 import {combineReducers} from 'redux'
 import{
   RECEIVE_POSTS,
-  RECEIVE_CATEGORIES
+  RECEIVE_CATEGORIES,
+  UPDATE_POST
 } from '../actions'
 
 function posts(state = [], action) {
   console.log('reducer posts invoked')
-  const { posts } = action
 
   switch (action.type) {
     case RECEIVE_POSTS :
-      return posts
+      return action.posts
+    case UPDATE_POST :
+      return state.filter(post => (post.id !== action.post.id)).concat([action.post])
     default :
       return state
   }
