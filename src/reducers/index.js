@@ -2,7 +2,8 @@ import {combineReducers} from 'redux'
 import{
   RECEIVE_POSTS,
   RECEIVE_CATEGORIES,
-  UPDATE_POST
+  UPDATE_POST,
+  ADD_POST
 } from '../actions'
 
 function posts(state = [], action) {
@@ -12,7 +13,10 @@ function posts(state = [], action) {
     case RECEIVE_POSTS :
       return action.posts
     case UPDATE_POST :
-      return state.filter(post => (post.id !== action.post.id)).concat([action.post])
+      const updatedPost = action.post
+      return state.map(post => (post.id === updatedPost.id) ? post = updatedPost : post)
+    case ADD_POST :
+      return [...state, action.post]
     default :
       return state
   }

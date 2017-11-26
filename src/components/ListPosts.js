@@ -40,6 +40,7 @@ class ListPosts extends Component {
         <h1> Readable </h1>
       </div>
       <div className='container'>
+        <Link to="/addpost">Add Post</Link>
         <div className='posts'>
           <ul>
             {filteredPosts.map(post => (

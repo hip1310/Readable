@@ -1,14 +1,16 @@
 import{
   getAllPosts,
   getCategories,
-  updateVoteScore
+  updateVoteScore,
+  addPost
 } from '../utils/api.js'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
 export const UPDATE_POST = 'UPDATE_POST'
+export const ADD_POST = 'ADD_POST'
 
-export function receivePosts({posts}){
+function receivePosts({posts}){
   console.log('action receivePosts invoked')
   return{
     type : RECEIVE_POSTS,
@@ -16,7 +18,7 @@ export function receivePosts({posts}){
   }
 }
 
-export function receiveCategories({categories}){
+function receiveCategories({categories}){
   console.log('action receiveCategories invoked')
   return{
     type : RECEIVE_CATEGORIES,
@@ -24,10 +26,18 @@ export function receiveCategories({categories}){
   }
 }
 
-export function updatePost({post}){
+function updatePost({post}){
   console.log('action updatePost invoked')
   return{
     type : UPDATE_POST,
+    post
+  }
+}
+
+function createPost({post}){
+  console.log('action createPost invoked')
+  return{
+    type : ADD_POST,
     post
   }
 }
@@ -42,4 +52,8 @@ export const fetchCategories = () => dispatch => (
 
 export const postVoteScore = (id, option) => dispatch => (
   updateVoteScore(id, option).then(post => dispatch(updatePost({post})))
+)
+
+export const addNewPost = (postContents) => dispatch => (
+  addPost(postContents).then(post => dispatch(createPost({post})))
 )

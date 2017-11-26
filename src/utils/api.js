@@ -1,3 +1,4 @@
+import uuid from 'node-uuid'
 const api = "http://localhost:3001"
 
 const headers = {
@@ -20,7 +21,7 @@ export function getCategories(){
 }
 
 export function updateVoteScore(id, optionValue){
-  console.log('api call to updateVoteScore' + optionValue)
+  console.log('api call to updateVoteScore')
   const body = JSON.stringify({option : optionValue})
 
   console.log('post body: ' + body)
@@ -28,6 +29,19 @@ export function updateVoteScore(id, optionValue){
            headers,
            method : 'POST',
            body   : `${body}`
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}
+
+export function addPost(postContents){
+  console.log('api call to addPost')
+  let postBody = JSON.stringify({...postContents, 'id': uuid.v4(), 'timestamp' : Date.now()})
+  console.log('post body: ' + postBody)
+  return fetch(`${api}/posts`, {
+           headers,
+           method : 'POST',
+           body   : `${postBody}`
          })
          .then(res => res.json())
          .catch(err => console.log(err))

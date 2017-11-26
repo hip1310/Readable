@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import './App.css';
-import {fetchAllPosts, fetchCategories} from '../actions'
+import {fetchAllPosts, fetchCategories, addNewPost} from '../actions'
 import ListPosts from './ListPosts'
-import {Route, withRouter} from 'react-router-dom'
+import AddPost from './AddPost'
+import {Route, withRouter, Switch} from 'react-router-dom'
 
 class App extends Component {
   componentDidMount(){
@@ -12,12 +13,26 @@ class App extends Component {
     this.props.dispatch(fetchCategories())
   }
 
+  createPost(postContents){
+    this.props.dispatch(addNewPost(postContents))
+    console.log('post added')
+  }
+
   render() {
     console.log('App Component render')
     return (
       <div>
-        <Route exact path="/" component={ListPosts}/>
-        <Route path="/:category" component={ListPosts}/>
+        <Switch>
+          <Route exact path="/" component={ListPosts}/>
+          <Route path="/addpost" render={({history}) => (
+            <AddPost
+              onCreatePost={(postContents) => {
+                this.createPost(postContents)
+                history.push('/')
+            }}/>
+          )}/>
+          <Route path="/:category" component={ListPosts}/>
+        </Switch>
       </div>
     );
   }
