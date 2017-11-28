@@ -10,14 +10,16 @@ class ListPosts extends Component {
   }
 
   componentWillReceiveProps(newProps){
-    const selectedCategory = newProps.match.params.category ?
-                             newProps.match.params.category : ''
-    this.setState((state) => ({selectedCategory}))
+    this.getSelectedCategory(newProps)
   }
 
   componentWillMount(){
-    const selectedCategory = this.props.match.params.category ?
-                             this.props.match.params.category : ''
+    this.getSelectedCategory(this.props)
+  }
+
+  getSelectedCategory(props){
+    const selectedCategory = props.match.params.category ?
+                             props.match.params.category : ''
     this.setState((state) => ({selectedCategory}))
   }
 
@@ -50,6 +52,9 @@ class ListPosts extends Component {
                   ------ Comments {post.commentCount} Score {post.voteScore}
                   &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>
                   &nbsp;<button onClick={() => updateVote(post.id, 'downVote')}>Down</button>
+                </p>
+                <p>
+                  <Link to={`/post/${post.id}`}>Edit</Link>
                 </p>
               </li>
             ))}

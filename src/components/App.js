@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import './App.css';
-import {fetchAllPosts, fetchCategories, addNewPost} from '../actions'
+import {fetchAllPosts, fetchCategories, addNewPost, editAPost} from '../actions'
 import ListPosts from './ListPosts'
 import AddPost from './AddPost'
 import {Route, withRouter, Switch} from 'react-router-dom'
@@ -18,16 +18,28 @@ class App extends Component {
     console.log('post added')
   }
 
+  editPost(id, postContents){
+    this.props.dispatch(editAPost(id, postContents))
+    console.log('post edited')
+  }
+
   render() {
     console.log('App Component render')
     return (
       <div>
         <Switch>
           <Route exact path="/" component={ListPosts}/>
-          <Route path="/addpost" render={({history}) => (
+          <Route exact path="/addpost" render={({history}) => (
             <AddPost
               onCreatePost={(postContents) => {
                 this.createPost(postContents)
+                history.push('/')
+            }}/>
+          )}/>
+          <Route path="/post/:postid" render={({history}) => (
+            <AddPost
+              onEditPost={(id, postContents) => {
+                this.editPost(id, postContents)
                 history.push('/')
             }}/>
           )}/>

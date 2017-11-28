@@ -46,3 +46,16 @@ export function addPost(postContents){
          .then(res => res.json())
          .catch(err => console.log(err))
 }
+
+export function editPost(id, postContents){
+  console.log('api call to editPost')
+  let postBody = JSON.stringify(postContents)
+  console.log('post body: ' + postBody)
+  return fetch(`${api}/posts/${id}`, {
+           headers,
+           method : 'PUT',
+           body   : `${postBody}`
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}
