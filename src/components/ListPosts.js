@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import './App.css';
 import {Link, withRouter} from 'react-router-dom'
-import {postVoteScore} from '../actions'
+import {postVoteScore, deleteAPost} from '../actions'
 
 class ListPosts extends Component {
   state = {
@@ -26,15 +26,14 @@ class ListPosts extends Component {
   render() {
     console.log('ListPosts Component render')
 
-    const {posts, categories, updateVote} = this.props
-    let filteredPosts
+    const {posts, categories, updateVote, deletePost} = this.props
+    let filteredPosts = posts.filter((post) => (!post.deleted))
 
     if(this.state.selectedCategory !== ''){
-      filteredPosts = posts.filter((post) => (
+      filteredPosts = filteredPosts.filter((post) => (
                         post.category === this.state.selectedCategory)
                       )
     }
-    else filteredPosts = posts
 
     return (
       <div>
@@ -54,7 +53,8 @@ class ListPosts extends Component {
                   &nbsp;<button onClick={() => updateVote(post.id, 'downVote')}>Down</button>
                 </p>
                 <p>
-                  <Link to={`/post/${post.id}`}>Edit</Link>
+                  <Link to={`/post/${post.id}`}>Edit</Link> &nbsp;
+                  <button onClick={() => deletePost(post.id)}>Delete</button>
                 </p>
               </li>
             ))}
@@ -85,7 +85,8 @@ function mapStateToProps({posts, categories}){
 
 function mapDispatchToProps(dispatch){
   return{
-    updateVote : (id, option) => dispatch(postVoteScore(id, option))
+    updateVote : (id, option) => dispatch(postVoteScore(id, option)),
+    deletePost : (id) => dispatch(deleteAPost(id))
   }
 }
 

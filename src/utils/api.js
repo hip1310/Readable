@@ -59,3 +59,13 @@ export function editPost(id, postContents){
          .then(res => res.json())
          .catch(err => console.log(err))
 }
+
+export function deletePost(id){
+  console.log('api call to deletePost')
+  return fetch(`${api}/posts/${id}`, {
+           headers,
+           method : 'DELETE'
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}

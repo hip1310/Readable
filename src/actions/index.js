@@ -3,7 +3,8 @@ import{
   getCategories,
   updateVoteScore,
   addPost,
-  editPost
+  editPost,
+  deletePost
 } from '../utils/api.js'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
@@ -61,4 +62,8 @@ export const addNewPost = (postContents) => dispatch => (
 
 export const editAPost = (id, postContents) => dispatch => (
   editPost(id, postContents).then(post => dispatch(updatePost({post})))
+)
+
+export const deleteAPost = (id) => dispatch => (
+  deletePost(id).then(post => dispatch(updatePost({post})))
 )
