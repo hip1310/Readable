@@ -21,19 +21,20 @@ class AddPost extends Component{
 
   componentWillMount(){
     console.log('AddPost componentWillMount')
-    this.getCurrPostFromId()
+    this.getCurrPostFromId(this.props)
   }
 
-  componentWillReceiveProps(){
+  // This method is used to keep data on the page even on refresh
+  componentWillReceiveProps(newProps){
     console.log('AddPost componentWillReceiveProps')
-    this.getCurrPostFromId()
+    this.getCurrPostFromId(newProps)
   }
 
-  getCurrPostFromId(){
-    const id = this.props.match.params.postid ?
-                   this.props.match.params.postid : null
+  getCurrPostFromId(props){
+    const id = props.match.params.postid ?
+                   props.match.params.postid : null
     if(id !== null){
-      const currPost = this.props.posts.find(function(post)
+      const currPost = props.posts.find(function(post)
                        { return post.id === id })
       if(currPost) {this.setState((state) => ({
         id,

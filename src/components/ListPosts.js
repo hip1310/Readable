@@ -13,6 +13,7 @@ class ListPosts extends Component {
     this.getSelectedCategory(newProps)
   }
 
+  // This method is used to keep data on the page even on refresh
   componentWillMount(){
     this.getSelectedCategory(this.props)
   }
@@ -46,7 +47,9 @@ class ListPosts extends Component {
           <ul>
             {filteredPosts.map(post => (
               <li key={post.id}>
-                <p>{post.title} - {post.author}</p>
+                <Link to={`/${post.category}/${post.id}`}>
+                {post.title} - {post.author}
+                </Link>
                 <p>
                   ------ Comments {post.commentCount} Score {post.voteScore}
                   &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>

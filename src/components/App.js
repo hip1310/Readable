@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import './App.css';
-import {fetchAllPosts, fetchCategories, addNewPost, editAPost} from '../actions'
+import{
+fetchAllPosts,
+fetchCategories,
+addNewPost,
+editAPost,
+deleteAPost
+} from '../actions'
 import ListPosts from './ListPosts'
 import AddPost from './AddPost'
+import ViewPost from './ViewPost'
 import {Route, withRouter, Switch} from 'react-router-dom'
 
 class App extends Component {
@@ -21,6 +28,11 @@ class App extends Component {
   editPost(id, postContents){
     this.props.dispatch(editAPost(id, postContents))
     console.log('post edited')
+  }
+
+  deletePost(id){
+    this.props.dispatch(deleteAPost(id))
+    console.log('post deleted')
   }
 
   render() {
@@ -43,7 +55,14 @@ class App extends Component {
                 history.push('/')
             }}/>
           )}/>
-          <Route path="/:category" component={ListPosts}/>
+          <Route exact path="/:category" component={ListPosts}/>
+          <Route path="/:category/:postid" render={({history}) => (
+            <ViewPost
+              onDeletePost={(id) => {
+                this.deletePost(id)
+                history.push('/')
+            }}/>
+          )}/>
         </Switch>
       </div>
     );
