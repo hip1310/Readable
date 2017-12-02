@@ -2,40 +2,53 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {postVoteScore} from '../actions'
+import {getComments, updateVoteScore} from '../utils/api.js'
 
 class ViewPost extends Component{
   state = {
-  	post : {}
-  }
-
-  componentWillMount(){
-    console.log('ViewPost componentWillMount')
-    this.getCurrPostFromId(this.props)
+    post : {},
+    comments : []
   }
 
   // This method is used to keep data on the page even on refresh
   componentWillReceiveProps(newProps){
     console.log('ViewPost componentWillReceiveProps')
-    this.getCurrPostFromId(newProps)
+    this.getCurrPostAndComments(newProps)
   }
 
-  getCurrPostFromId(props){
+  componentDidMount(){
+    console.log('ViewPost componentDidMount')
+    this.getCurrPostAndComments(this.props)
+  }
+
+  getCurrPostAndComments(props){
     const id = props.match.params.postid ?
                    props.match.params.postid : null
     console.log('ViewPost: postid ' + id)
+    let currPost = null
     if(id !== null){
-      const currPost = props.posts.find(function(post)
+      currPost = props.posts.find(function(post)
                        { return post.id === id })
       console.log('ViewPost: currPost ' + currPost)
       if(currPost) {this.setState((state) => ({
         post : currPost
       }))}
+
+      if(currPost && currPost.commentCount > 0){ getComments(currPost.id).then(comments =>
+        this.setState(state => ({comments})))}
     }
   }
-  
+
+  updateCommentVote(id, option){
+    updateVoteScore('comments', id, option).then(updatedComment =>
+      this.setState(state => ({
+        comments : state.comments.filter(comment => comment.id !== updatedComment.id).concat([updatedComment])
+    })))
+  }
+
   render(){
   	console.log('ViewPost render()')
-  	const post = this.state.post
+    const {post, comments} = this.state
   	const {updateVote, onDeletePost} = this.props
 
     return(
@@ -53,6 +66,19 @@ class ViewPost extends Component{
           <Link to={`/post/${post.id}`}>Edit</Link> &nbsp;
           <button onClick={() => onDeletePost(post.id)}>Delete</button>
         </p>
+        <p>Comments ({post.commentCount})</p>
+        <ul>
+          {comments && comments.map(comment =>
+            <li key={comment.id}>
+              <p> {comment.body} - {comment.author} </p>
+              <p>
+                ---------------- Score {comment.voteScore}
+                &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'upVote')}>Up</button>
+                &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'downVote')}>Down</button>
+              </p>
+            </li>
+          )}
+        </ul>
       </div>
   	)
   }
@@ -66,7 +92,7 @@ function mapStateToProps({posts}){
 
 function mapDispatchToProps(dispatch){
   return{
-    updateVote : (id, option) => dispatch(postVoteScore(id, option)),
+    updateVote : (id, option) => dispatch(postVoteScore(id, option))
   }
 }
 

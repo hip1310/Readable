@@ -20,12 +20,22 @@ export function getCategories(){
            .then(data => data.categories)
 }
 
-export function updateVoteScore(id, optionValue){
+/**
+ * API call to update VoteScore for a post/comment
+ * params:
+ *   data        : string - posts/comments
+ *   id          : string - post/comment id
+ *   optionValue : string - upVote/downVote
+ * return: object - updated post/comment
+*/
+export function updateVoteScore(data, id, optionValue){
   console.log('api call to updateVoteScore')
-  const body = JSON.stringify({option : optionValue})
+  const url = api + "/" + data + "/" + id;
+  console.log('url : ' + url + 'option : ' + optionValue)
+  const body = JSON.stringify({option : optionValue});
 
   console.log('post body: ' + body)
-  return fetch(`${api}/posts/${id}`, {
+  return fetch(`${url}`, {
            headers,
            method : 'POST',
            body   : `${body}`
@@ -65,6 +75,15 @@ export function deletePost(id){
   return fetch(`${api}/posts/${id}`, {
            headers,
            method : 'DELETE'
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}
+
+export function getComments(postId){
+  console.log('api call to getComments')
+  return fetch(`${api}/posts/${postId}/comments`, {
+           headers,
          })
          .then(res => res.json())
          .catch(err => console.log(err))

@@ -53,7 +53,7 @@ export const fetchCategories = () => dispatch => (
 )
 
 export const postVoteScore = (id, option) => dispatch => (
-  updateVoteScore(id, option).then(post => dispatch(updatePost({post})))
+  updateVoteScore('posts', id, option).then(post => dispatch(updatePost({post})))
 )
 
 export const addNewPost = (postContents) => dispatch => (
