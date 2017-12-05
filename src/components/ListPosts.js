@@ -3,10 +3,12 @@ import {connect} from 'react-redux'
 import './App.css';
 import {Link, withRouter} from 'react-router-dom'
 import {postVoteScore, deleteAPost} from '../actions'
+import sortBy from 'sort-by'
 
 class ListPosts extends Component {
   state = {
-    selectedCategory : ''
+    selectedCategory : '',
+    sortBy : ''
   }
 
   componentWillReceiveProps(newProps){
@@ -36,13 +38,24 @@ class ListPosts extends Component {
                       )
     }
 
+    filteredPosts.sort(sortBy(this.state.sortBy))
+
     return (
       <div>
       <div className="App-header">
         <h1> Readable </h1>
       </div>
       <div className='container'>
-        <Link to="/addpost">Add Post</Link>
+        <Link to="/addpost">Add Post</Link> &nbsp;
+        <select name="sortBy"
+         value={this.state.sortBy}
+         onChange={(e) => (this.setState({sortBy : e.target.value}))}>
+          <option value="timestamp">Oldest</option>
+          <option value="-timestamp">Newest</option>
+          <option value="voteScore">Vote Score (low to high)</option>
+          <option value="-voteScore">Vote Score (high to low)</option>
+          <option value="title">Title</option>
+        </select>
         <div className='posts'>
           <ul>
             {filteredPosts.map(post => (
