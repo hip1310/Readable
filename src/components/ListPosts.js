@@ -4,6 +4,7 @@ import './App.css';
 import {Link, withRouter} from 'react-router-dom'
 import {postVoteScore, deleteAPost} from '../actions'
 import sortBy from 'sort-by'
+import {getDateString} from '../utils/utils'
 
 class ListPosts extends Component {
   state = {
@@ -63,6 +64,7 @@ class ListPosts extends Component {
                 <Link to={`/${post.category}/${post.id}`}>
                 {post.title} - {post.author}
                 </Link>
+                <p>{getDateString(post.timestamp)}</p>
                 <p>
                   ------ Comments {post.commentCount} Score {post.voteScore}
                   &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>

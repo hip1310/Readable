@@ -10,6 +10,7 @@ editComment,
 addNew
 } from '../utils/api.js'
 import serializeForm from 'form-serialize'
+import {getDateString} from '../utils/utils'
 
 class ViewPost extends Component{
   state = {
@@ -106,6 +107,7 @@ class ViewPost extends Component{
         <p> <Link to="/"> Back </Link> </p>
         <p>{post.category}</p>
         <p>{post.title}  -  {post.author}</p>
+        <p>{getDateString(post.timestamp)}</p>
         <p>{post.body}</p>
         <p>
           --------------------- Votes {post.voteScore}
@@ -146,6 +148,7 @@ class ViewPost extends Component{
             :
             <li key={comment.id}>
               <p> {comment.body} - {comment.author} </p>
+              <p> {getDateString(comment.timestamp)} </p>
               <p>
                 ---------------- Score {comment.voteScore}
                 &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'upVote')}>Up</button>
