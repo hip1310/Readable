@@ -44,11 +44,19 @@ export function updateVoteScore(data, id, optionValue){
          .catch(err => console.log(err))
 }
 
-export function addPost(postContents){
+/**
+ * API call to add a post / comment
+ * params:
+ *   endpoint        : string - "posts" / "comments"
+ *   contents        : string - post / comment contents
+ * return: object - added post / comment
+*/
+export function addNew(endpoint, contents){
   console.log('api call to addPost')
-  let postBody = JSON.stringify({...postContents, 'id': uuid.v4(), 'timestamp' : Date.now()})
+  const url = api + "/" + endpoint;
+  const postBody = JSON.stringify({...contents, 'id': uuid.v4(), 'timestamp' : Date.now()})
   console.log('post body: ' + postBody)
-  return fetch(`${api}/posts`, {
+  return fetch(`${url}`, {
            headers,
            method : 'POST',
            body   : `${postBody}`
@@ -84,6 +92,29 @@ export function getComments(postId){
   console.log('api call to getComments')
   return fetch(`${api}/posts/${postId}/comments`, {
            headers,
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}
+
+export function deleteComment(id){
+  console.log('api call to deleteComment')
+  return fetch(`${api}/comments/${id}`, {
+           headers,
+           method : 'DELETE'
+         })
+         .then(res => res.json())
+         .catch(err => console.log(err))
+}
+
+export function editComment(id, contents){
+  console.log('api call to editComment')
+  let postBody = JSON.stringify({'body' : contents, 'timestamp' : Date.now()})
+  console.log('post body: ' + postBody)
+  return fetch(`${api}/comments/${id}`, {
+           headers,
+           method : 'PUT',
+           body   : `${postBody}`
          })
          .then(res => res.json())
          .catch(err => console.log(err))

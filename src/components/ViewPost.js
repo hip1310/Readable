@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
-import {postVoteScore} from '../actions'
-import {getComments, updateVoteScore} from '../utils/api.js'
+import {postVoteScore, updatePost} from '../actions'
+import{
+getComments,
+updateVoteScore,
+deleteComment,
+editComment,
+addNew
+} from '../utils/api.js'
+import serializeForm from 'form-serialize'
 
 class ViewPost extends Component{
   state = {
     post : {},
-    comments : []
+    comments : [],
+    editComment : ''
   }
 
   // This method is used to keep data on the page even on refresh
@@ -30,12 +38,18 @@ class ViewPost extends Component{
       currPost = props.posts.find(function(post)
                        { return post.id === id })
       console.log('ViewPost: currPost ' + currPost)
-      if(currPost) {this.setState((state) => ({
-        post : currPost
-      }))}
-
-      if(currPost && currPost.commentCount > 0){ getComments(currPost.id).then(comments =>
-        this.setState(state => ({comments})))}
+      if(currPost) {
+        if(currPost.commentCount > 0){
+          getComments(currPost.id).then(comments =>
+            this.setState(state => ({
+              comments,
+              post : currPost
+          })))
+        }
+        else{
+          this.setState((state) => ({post : currPost, comments : []}))
+        }
+      }
     }
   }
 
@@ -46,10 +60,46 @@ class ViewPost extends Component{
     })))
   }
 
+  deleteAComment(id){
+    let currPost = this.state.post
+    currPost.commentCount = currPost.commentCount - 1
+    deleteComment(id).then(comment => this.setState(state => ({
+      comments : state.comments.filter(currComment => currComment.id !== comment.id),
+      post : currPost
+    })))
+  }
+
+  editAComment(id){
+    if(!this.editBox.value) return
+
+    editComment(id, this.editBox.value).then((updatedComment) =>
+      this.setState(state => ({
+        comments : state.comments.map(comment =>
+          (comment.id === updatedComment.id) ? comment = updatedComment : comment),
+        editComment : ''
+    })))
+  }
+
+  // Handle submission of new comment
+  handleSubmit = (e) => {
+    e.preventDefault()
+    let values = serializeForm(e.target, {hash: true})
+    values.parentId = this.state.post.id
+    e.target.reset()
+    let currPost = this.state.post
+    currPost.commentCount = currPost.commentCount + 1
+    addNew("comments", values).then(comment => this.setState(state => ({
+      comments : state.comments.concat([comment]),
+      post : currPost
+    })))
+  }
+
   render(){
-  	console.log('ViewPost render()')
-    const {post, comments} = this.state
-  	const {updateVote, onDeletePost} = this.props
+    console.log('ViewPost render()')
+    const {post, comments, editComment} = this.state
+    const {updateVote, onDeletePost} = this.props
+
+    let filteredComments = comments.filter((comment) => (!comment.deleted))
 
     return(
       <div>
@@ -67,14 +117,43 @@ class ViewPost extends Component{
           <button onClick={() => onDeletePost(post.id)}>Delete</button>
         </p>
         <p>Comments ({post.commentCount})</p>
+          <form onSubmit={this.handleSubmit}>
+          <p>
+            <textarea name="body" rows="3" cols="50" placeholder="Write a comment..."
+             required/>
+          </p>
+          <p>
+            <input type="text" name="author" placeholder="Comment Author"
+              required/>
+          </p>
+          <button>Submit</button>
+          </form>
         <ul>
-          {comments && comments.map(comment =>
+          {filteredComments && filteredComments.map(comment =>
+            editComment && editComment === comment.id ?
+            <li key={comment.id}>
+              <p>
+                <textarea name="body" rows="3" cols="50" placeholder="Edit Comment"
+                 defaultValue={comment.body} required
+                 ref={(input) => this.editBox = input}/>
+              </p>
+              <p>
+                <button onClick={() => this.editAComment(comment.id)}>Save</button>
+                <button onClick={() => this.setState(state => ({editComment : ''}))}>Cancel</button>
+              </p>
+
+            </li>
+            :
             <li key={comment.id}>
               <p> {comment.body} - {comment.author} </p>
               <p>
                 ---------------- Score {comment.voteScore}
                 &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'upVote')}>Up</button>
                 &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'downVote')}>Down</button>
+              </p>
+              <p>
+                <button onClick={() => this.setState(state => ({editComment : `${comment.id}`}))}>Edit</button>
+                &nbsp; <button onClick={() => this.deleteAComment(comment.id)}>Delete</button>
               </p>
             </li>
           )}
@@ -92,7 +171,8 @@ function mapStateToProps({posts}){
 
 function mapDispatchToProps(dispatch){
   return{
-    updateVote : (id, option) => dispatch(postVoteScore(id, option))
+    updateVote : (id, option) => dispatch(postVoteScore(id, option)),
+    updateCommentCount : (post) => dispatch(updatePost({post}))
   }
 }
 

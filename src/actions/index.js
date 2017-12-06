@@ -2,7 +2,7 @@ import{
   getAllPosts,
   getCategories,
   updateVoteScore,
-  addPost,
+  addNew,
   editPost,
   deletePost
 } from '../utils/api.js'
@@ -28,7 +28,7 @@ function receiveCategories({categories}){
   }
 }
 
-function updatePost({post}){
+export function updatePost({post}){
   console.log('action updatePost invoked')
   return{
     type : UPDATE_POST,
@@ -57,7 +57,7 @@ export const postVoteScore = (id, option) => dispatch => (
 )
 
 export const addNewPost = (postContents) => dispatch => (
-  addPost(postContents).then(post => dispatch(createPost({post})))
+  addNew("posts", postContents).then(post => dispatch(createPost({post})))
 )
 
 export const editAPost = (id, postContents) => dispatch => (
