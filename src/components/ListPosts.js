@@ -5,6 +5,15 @@ import {Link, withRouter} from 'react-router-dom'
 import {postVoteScore, deleteAPost} from '../actions'
 import sortBy from 'sort-by'
 import {getDateString} from '../utils/utils'
+import {
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  ListGroupItem,
+  Button,
+  Glyphicon
+} from 'react-bootstrap/lib'
 
 class ListPosts extends Component {
   state = {
@@ -12,11 +21,11 @@ class ListPosts extends Component {
     sortBy : ''
   }
 
+  // This method is used to keep data on the page even on refresh
   componentWillReceiveProps(newProps){
     this.getSelectedCategory(newProps)
   }
 
-  // This method is used to keep data on the page even on refresh
   componentWillMount(){
     this.getSelectedCategory(this.props)
   }
@@ -39,57 +48,90 @@ class ListPosts extends Component {
                       )
     }
 
-    filteredPosts.sort(sortBy(this.state.sortBy))
+    if(this.state.sortBy !== '') filteredPosts.sort(sortBy(this.state.sortBy))
 
     return (
-      <div>
-      <div className="App-header">
-        <h1> Readable </h1>
-      </div>
-      <div className='container'>
-        <Link to="/addpost">Add Post</Link> &nbsp;
-        <select name="sortBy"
-         value={this.state.sortBy}
-         onChange={(e) => (this.setState({sortBy : e.target.value}))}>
-          <option value="timestamp">Oldest</option>
-          <option value="-timestamp">Newest</option>
-          <option value="voteScore">Vote Score (low to high)</option>
-          <option value="-voteScore">Vote Score (high to low)</option>
-          <option value="title">Title</option>
-        </select>
-        <div className='posts'>
-          <ul>
-            {filteredPosts.map(post => (
-              <li key={post.id}>
-                <Link to={`/${post.category}/${post.id}`}>
-                {post.title} - {post.author}
+      <Grid>
+        <Row>
+          <Col lg={8} md={8}>
+            <div className="my-4">
+              <div className="my-4-1">
+                <Link to="/addpost">
+                  <Button bsStyle="primary">
+                    <Glyphicon className="mr-5" glyph="plus"/>Add Post
+                  </Button>
                 </Link>
-                <p>{getDateString(post.timestamp)}</p>
-                <p>
-                  ------ Comments {post.commentCount} Score {post.voteScore}
-                  &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>
-                  &nbsp;<button onClick={() => updateVote(post.id, 'downVote')}>Down</button>
-                </p>
-                <p>
-                  <Link to={`/post/${post.id}`}>Edit</Link> &nbsp;
-                  <button onClick={() => deletePost(post.id)}>Delete</button>
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className='categories'>
-          <ul>
-            <li><Link to="/">All</Link></li>
-            {categories.map((category, i) => (
-              <li key={i}>
-                <Link to={category.path}>{category.name}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      </div>
+              </div>
+              <div className="my-4-2">
+                <label> <strong> Sort-by </strong> </label>
+                <select className="round-border" name="sortBy" value={this.state.sortBy}
+                 onChange={(e) => (this.setState({sortBy : e.target.value}))}>
+                  <option value="timestamp">Oldest</option>
+                  <option value="-timestamp">Newest</option>
+                  <option value="title">Title</option>
+                  <option value="voteScore">Vote Score (low to high)</option>
+                  <option value="-voteScore">Vote Score (high to low)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+                {filteredPosts.length > 0 ? filteredPosts.map(post => (
+                  <div className="card mt-4" key={post.id}>
+                    <div className="card-body">
+                      <Link to={`/${post.category}/${post.id}`}>
+                        <h2 className="card-title">{post.title}</h2>
+                      </Link>
+                      <p className="card-text">
+                        {post.body.split('\n')[0].slice(0,200) + '...'}
+                      </p>
+                      <p className="card-utils">
+                        <span className="mr-10"><Glyphicon glyph="comment"/>
+                          <span className="fixspan">{post.commentCount}</span>
+                        </span>
+                        <span>
+                          <button onClick={() => updateVote(post.id, 'upVote')}>
+                            <Glyphicon glyph="thumbs-up"/>
+                          </button>
+                          <span className="fixspan">{post.voteScore}</span>
+                          <button onClick={() => updateVote(post.id, 'downVote')}>
+                            <Glyphicon glyph="thumbs-down"/>
+                          </button>
+                        </span>
+                      </p>
+                    </div>
+                    <div className="card-footer">
+                      <div className="my-4-1">
+                        Posted on {getDateString(post.timestamp)} by {post.author}
+                      </div>
+                      <div className="my-4-2">
+                        <Link className="mr-10" to={`/post/${post.id}`}>
+                          <Glyphicon glyph="edit"/>
+                        </Link>
+                        <button onClick={() => deletePost(post.id)}>
+                          <Glyphicon glyph="trash"/>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )) :
+                <label className="mt-4"><p> No posts </p></label>}
+            </div>
+          </Col>
+          <Col lg={4} md={4}>
+              <ListGroup className="list-unstyled">
+                  <ListGroupItem className="card-header">
+                    <h5>Categories</h5>
+                  </ListGroupItem>
+                  <ListGroupItem><Link to="/">All</Link></ListGroupItem>
+                  {categories.map((category, i) => (
+                    <ListGroupItem key={i}>
+                      <Link to={category.path}>{category.name}</Link>
+                    </ListGroupItem>
+                  ))}
+              </ListGroup>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }

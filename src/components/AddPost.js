@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import serializeForm from 'form-serialize'
+import{
+  Grid,
+  Button,
+  Form,
+  FormGroup,
+  ControlLabel,
+  FormControl
+} from 'react-bootstrap/lib'
 
 class AddPost extends Component{
   state = {
@@ -51,38 +59,43 @@ class AddPost extends Component{
     const {categories} = this.props
 
     return(
-      <div>
-        <p> <Link to="/"> Back </Link> </p>
-        <p> Add New Post </p>
-        <form onSubmit={this.handleSubmit}>
-          <p> Title <br></br>
-            <input type="text" name="title" placeholder="Post Title"
-             value={this.state.title} required
+      <Grid>
+        <p> <Link to="/"><Button bsStyle="primary"> Back </Button></Link> </p>
+        <Form onSubmit={this.handleSubmit}>
+          <FormGroup>
+            <ControlLabel>Title</ControlLabel>
+            <FormControl type="text" name="title"
+             placeholder="Post Title" value={this.state.title} required
              onChange={(e) => (this.setState({title : e.target.value}))}/>
-          </p>
-          <p> Author <br></br>
-            <input type="text" name="author" placeholder="Post Author"
-             value={this.state.author} required
-             onChange={(e) => (this.setState({author : e.target.value}))}/>
-          </p>
-          <p>
-            <textarea name="body" rows="10" cols="50" placeholder="Post Contents"
-             value={this.state.body} required
-             onChange={(e) => (this.setState({body : e.target.value}))}/>
-          </p>
-          <p> Category &nbsp;
-            <select name="category" required
-             value={this.state.category}
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Author</ControlLabel>
+            <FormControl type="text" name="author"
+              placeholder="Post Author" value={this.state.author} required
+              onChange={(e) => (this.setState({author : e.target.value}))}/>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Post Contents</ControlLabel>
+            <FormControl componentClass="textarea" name="body" rows="20"
+              placeholder="Post Contents" value={this.state.body} required
+              onChange={(e) => (this.setState({body : e.target.value}))}/>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Category</ControlLabel>
+            <FormControl componentClass="select" name="category" required
+             value={this.state.category} lg={10}
              onChange={(e) => (this.setState({category : e.target.value}))}>
               <option value="">Select Category</option>
               {categories.map((category, i) =>
                 <option key={i} value={category.name}>{category.name}</option>
               )}
-            </select>
-          </p>
-          <button>Submit</button>
-        </form>
-      </div>
+            </FormControl>
+          </FormGroup>
+          <FormGroup>
+            <Button type="submit" bsStyle="primary">Submit</Button>
+          </FormGroup>
+        </Form>
+      </Grid>
     )
   }
 }

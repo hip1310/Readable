@@ -3,14 +3,24 @@ import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {postVoteScore, updatePost} from '../actions'
 import{
-getComments,
-updateVoteScore,
-deleteComment,
-editComment,
-addNew
+  getComments,
+  updateVoteScore,
+  deleteComment,
+  editComment,
+  addNew
 } from '../utils/api.js'
 import serializeForm from 'form-serialize'
 import {getDateString} from '../utils/utils'
+import{
+  Grid,
+  ListGroup,
+  ListGroupItem,
+  Glyphicon,
+  Button,
+  Form,
+  FormGroup,
+  FormControl
+} from 'react-bootstrap/lib'
 
 class ViewPost extends Component{
   state = {
@@ -57,7 +67,7 @@ class ViewPost extends Component{
   updateCommentVote(id, option){
     updateVoteScore('comments', id, option).then(updatedComment =>
       this.setState(state => ({
-        comments : state.comments.filter(comment => comment.id !== updatedComment.id).concat([updatedComment])
+        comments : state.comments.map(comment => (comment.id === updatedComment.id) ? comment = updatedComment : comment)
     })))
   }
 
@@ -103,65 +113,114 @@ class ViewPost extends Component{
     let filteredComments = comments.filter((comment) => (!comment.deleted))
 
     return(
-      <div>
-        <p> <Link to="/"> Back </Link> </p>
-        <p>{post.category}</p>
-        <p>{post.title}  -  {post.author}</p>
-        <p>{getDateString(post.timestamp)}</p>
-        <p>{post.body}</p>
-        <p>
-          --------------------- Votes {post.voteScore}
-          &nbsp;<button onClick={() => updateVote(post.id, 'upVote')}>Up</button>
-          &nbsp;<button onClick={() => updateVote(post.id, 'downVote')}>Down</button>
-        </p>
-        <p>
-          <Link to={`/post/${post.id}`}>Edit</Link> &nbsp;
-          <button onClick={() => onDeletePost(post.id)}>Delete</button>
-        </p>
-        <p>Comments ({post.commentCount})</p>
-          <form onSubmit={this.handleSubmit}>
-          <p>
-            <textarea name="body" rows="3" cols="50" placeholder="Write a comment..."
-             required/>
-          </p>
-          <p>
-            <input type="text" name="author" placeholder="Comment Author"
-              required/>
-          </p>
-          <button>Submit</button>
-          </form>
-        <ul>
+      <Grid>
+        <p><Link to="/"><Button bsStyle="primary"> Back </Button></Link></p>
+        <h1 className="mt-4">{post.title}</h1>
+        <div className="bottom-line my-4 lead">
+          <div className="my-4-1">by {post.author} </div>
+          <div className="my-4-2">Category: {post.category} </div>
+        </div>
+        <div className="bottom-line">
+          <div className="my-4 pb-5">
+            <div className="my-4-1">
+              {getDateString(post.timestamp)}
+            </div>
+            <div className="my-4-2">
+              <span className="mr-20">
+                <button onClick={() => updateVote(post.id, 'upVote')}>
+                  <Glyphicon glyph="thumbs-up"/>
+                </button>
+                <span className="fixspan">{post.voteScore}</span>
+                <button onClick={() => updateVote(post.id, 'downVote')}>
+                  <Glyphicon glyph="thumbs-down"/>
+                </button>
+              </span>
+              <span>
+                <Link className="mr-10" to={`/post/${post.id}`}>
+                  <Glyphicon glyph="edit"/>
+                </Link>
+                <button onClick={() => onDeletePost(post.id)}>
+                  <Glyphicon glyph="trash"/>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="mt-4 bottom-line">
+          {post.body && post.body.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>)}
+        </div>
+        <div className="card mt-4 width-fix">
+          <h5 className="card-header">Leave a comment:</h5>
+          <div className="card-body">
+            <Form onSubmit={this.handleSubmit}>
+              <FormGroup>
+                <FormControl componentClass="textarea" name="body"
+                 rows="5" placeholder="Write a comment..." required/>
+              </FormGroup>
+              <FormGroup>
+                <FormControl type="text" name="author"
+                 placeholder="Comment Author" required/>
+              </FormGroup>
+              <Button type="submit" bsStyle="primary">Submit</Button>
+            </Form>
+          </div>
+        </div>
+        <label className="mt-4"><p>Comments ({post.commentCount})</p></label>
+        <ListGroup className="media-list width-fix">
           {filteredComments && filteredComments.map(comment =>
             editComment && editComment === comment.id ?
-            <li key={comment.id}>
+            <ListGroupItem key={comment.id} className="media mt-4">
               <p>
-                <textarea name="body" rows="3" cols="50" placeholder="Edit Comment"
-                 defaultValue={comment.body} required
-                 ref={(input) => this.editBox = input}/>
+                <textarea className="round-border" name="body" rows="3"
+                 placeholder="Edit Comment" defaultValue={comment.body}
+                 required ref={(input) => this.editBox = input}/>
               </p>
               <p>
-                <button onClick={() => this.editAComment(comment.id)}>Save</button>
-                <button onClick={() => this.setState(state => ({editComment : ''}))}>Cancel</button>
+                <Button bsStyle="primary" className="mr-5" onClick={() => this.editAComment(comment.id)}>
+                  Save
+                </Button>
+                <Button onClick={() => this.setState(state => ({editComment : ''}))}>
+                  Cancel
+                </Button>
               </p>
-
-            </li>
+            </ListGroupItem>
             :
-            <li key={comment.id}>
-              <p> {comment.body} - {comment.author} </p>
-              <p> {getDateString(comment.timestamp)} </p>
-              <p>
-                ---------------- Score {comment.voteScore}
-                &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'upVote')}>Up</button>
-                &nbsp;<button onClick={() => this.updateCommentVote(comment.id, 'downVote')}>Down</button>
-              </p>
-              <p>
-                <button onClick={() => this.setState(state => ({editComment : `${comment.id}`}))}>Edit</button>
-                &nbsp; <button onClick={() => this.deleteAComment(comment.id)}>Delete</button>
-              </p>
-            </li>
+            <ListGroupItem key={comment.id} className="media mt-4">
+              <div>
+                <div className="media-left">
+                  <p>
+                    <Button bsStyle="primary" onClick={() => this.updateCommentVote(comment.id, 'upVote')}>
+                      <Glyphicon glyph="triangle-top"/>
+                    </Button>
+                  </p>
+                  <p className="comment-score">{comment.voteScore}</p>
+                  <p>
+                    <Button bsStyle="primary" onClick={() => this.updateCommentVote(comment.id, 'downVote')}>
+                      <Glyphicon glyph="triangle-bottom"/>
+                    </Button>
+                  </p>
+                </div>
+                <div className="media-body">
+                  <p>{comment.body}</p>
+                </div>
+              </div>
+              <div className="media-footer">
+                <div className="my-4-1">
+                  Posted on {getDateString(comment.timestamp)} by {comment.author}
+                </div>
+                <div className="my-4-2">
+                  <button className="mr-5" onClick={() => this.setState(state => ({editComment : `${comment.id}`}))}>
+                    <Glyphicon glyph="edit"/>
+                  </button>
+                  <button onClick={() => this.deleteAComment(comment.id)}>
+                    <Glyphicon glyph="trash"/>
+                  </button>
+                </div>
+              </div>
+            </ListGroupItem>
           )}
-        </ul>
-      </div>
+        </ListGroup>
+      </Grid>
   	)
   }
 }

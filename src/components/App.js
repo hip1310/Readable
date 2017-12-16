@@ -2,16 +2,17 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import './App.css';
 import{
-fetchAllPosts,
-fetchCategories,
-addNewPost,
-editAPost,
-deleteAPost
+  fetchAllPosts,
+  fetchCategories,
+  addNewPost,
+  editAPost,
+  deleteAPost
 } from '../actions'
 import ListPosts from './ListPosts'
 import AddPost from './AddPost'
 import ViewPost from './ViewPost'
 import {Route, withRouter, Switch} from 'react-router-dom'
+import {Navbar} from 'react-bootstrap/lib'
 
 class App extends Component {
   componentDidMount(){
@@ -39,6 +40,13 @@ class App extends Component {
     console.log('App Component render')
     return (
       <div>
+        <Navbar className="navbar-expand-lg navbar-dark bg-dark">
+          <Navbar.Header>
+            <Navbar.Brand>
+              Readable
+            </Navbar.Brand>
+          </Navbar.Header>
+        </Navbar>
         <Switch>
           <Route exact path="/" component={ListPosts}/>
           <Route exact path="/addpost" render={({history}) => (
