@@ -114,7 +114,7 @@ class ListPosts extends Component {
                     </div>
                   </div>
                 )) :
-                <label className="mt-4"><p> No posts </p></label>}
+                <h1> No posts </h1>}
             </div>
           </Col>
           <Col lg={4} md={4}>

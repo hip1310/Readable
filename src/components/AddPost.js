@@ -40,7 +40,7 @@ class AddPost extends Component{
 
   getCurrPostFromId(props){
     const id = props.match.params.postid ?
-                   props.match.params.postid : null
+                 props.match.params.postid : null
     if(id !== null){
       const currPost = props.posts.find(function(post)
                        { return post.id === id })
@@ -61,6 +61,9 @@ class AddPost extends Component{
     return(
       <Grid>
         <p> <Link to="/"><Button bsStyle="primary"> Back </Button></Link> </p>
+        {this.props.match.params.postid && !this.state.id ?
+          <h1>No post found to be edited...</h1>
+        :
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <ControlLabel>Title</ControlLabel>
@@ -94,7 +97,7 @@ class AddPost extends Component{
           <FormGroup>
             <Button type="submit" bsStyle="primary">Submit</Button>
           </FormGroup>
-        </Form>
+        </Form>}
       </Grid>
     )
   }

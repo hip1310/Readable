@@ -13,6 +13,7 @@ import serializeForm from 'form-serialize'
 import {getDateString} from '../utils/utils'
 import{
   Grid,
+  Row,
   ListGroup,
   ListGroupItem,
   Glyphicon,
@@ -60,6 +61,9 @@ class ViewPost extends Component{
         else{
           this.setState((state) => ({post : currPost, comments : []}))
         }
+      }
+      else{
+        this.setState((state) => ({post : currPost, comments : []}))
       }
     }
   }
@@ -114,7 +118,11 @@ class ViewPost extends Component{
 
     return(
       <Grid>
-        <p><Link to="/"><Button bsStyle="primary"> Back </Button></Link></p>
+        <Row>
+        <Link to="/"><Button bsStyle="primary"> Back </Button></Link>
+        </Row>
+        {post ?
+        <Row>
         <h1 className="mt-4">{post.title}</h1>
         <div className="bottom-line my-4 lead">
           <div className="my-4-1">by {post.author} </div>
@@ -220,6 +228,8 @@ class ViewPost extends Component{
             </ListGroupItem>
           )}
         </ListGroup>
+        </Row>
+        : <h1>Post not found...</h1>}
       </Grid>
   	)
   }
