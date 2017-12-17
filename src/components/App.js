@@ -9,7 +9,7 @@ import{
   deleteAPost
 } from '../actions'
 import ListPosts from './ListPosts'
-import AddPost from './AddPost'
+import AddEditPost from './AddEditPost'
 import ViewPost from './ViewPost'
 import {Route, withRouter, Switch} from 'react-router-dom'
 import {Navbar} from 'react-bootstrap/lib'
@@ -50,14 +50,14 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={ListPosts}/>
           <Route exact path="/addpost" render={({history}) => (
-            <AddPost
+            <AddEditPost
               onCreatePost={(postContents) => {
                 this.createPost(postContents)
                 history.push('/')
             }}/>
           )}/>
           <Route path="/post/:postid" render={({history}) => (
-            <AddPost
+            <AddEditPost
               onEditPost={(id, postContents) => {
                 this.editPost(id, postContents)
                 history.push('/')

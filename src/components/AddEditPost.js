@@ -11,7 +11,7 @@ import{
   FormControl
 } from 'react-bootstrap/lib'
 
-class AddPost extends Component{
+class AddEditPost extends Component{
   state = {
     id       : null,
     title    : '',
@@ -110,4 +110,4 @@ function mapStateToProps({posts, categories}){
   }
 }
 
-export default withRouter(connect(mapStateToProps)(AddPost))
+export default withRouter(connect(mapStateToProps)(AddEditPost))
