@@ -32,24 +32,22 @@ class ViewPost extends Component{
 
   // This method is used to keep data on the page even on refresh
   componentWillReceiveProps(newProps){
-    console.log('ViewPost componentWillReceiveProps')
     this.getCurrPostAndComments(newProps)
   }
 
   componentDidMount(){
-    console.log('ViewPost componentDidMount')
     this.getCurrPostAndComments(this.props)
   }
 
   getCurrPostAndComments(props){
     const id = props.match.params.postid ?
                    props.match.params.postid : null
-    console.log('ViewPost: postid ' + id)
+
     let currPost = null
     if(id !== null){
       currPost = props.posts.find(function(post)
                        { return post.id === id })
-      console.log('ViewPost: currPost ' + currPost)
+
       if(currPost) {
         if(currPost.commentCount > 0){
           getComments(currPost.id).then(comments =>
@@ -110,7 +108,6 @@ class ViewPost extends Component{
   }
 
   render(){
-    console.log('ViewPost render()')
     const {post, comments, editComment} = this.state
     const {updateVote, onDeletePost} = this.props
 

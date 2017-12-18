@@ -13,7 +13,6 @@ export const UPDATE_POST = 'UPDATE_POST'
 export const ADD_POST = 'ADD_POST'
 
 function receivePosts({posts}){
-  console.log('action receivePosts invoked')
   return{
     type : RECEIVE_POSTS,
     posts
@@ -21,7 +20,6 @@ function receivePosts({posts}){
 }
 
 function receiveCategories({categories}){
-  console.log('action receiveCategories invoked')
   return{
     type : RECEIVE_CATEGORIES,
     categories
@@ -29,7 +27,6 @@ function receiveCategories({categories}){
 }
 
 export function updatePost({post}){
-  console.log('action updatePost invoked')
   return{
     type : UPDATE_POST,
     post
@@ -37,7 +34,6 @@ export function updatePost({post}){
 }
 
 function createPost({post}){
-  console.log('action createPost invoked')
   return{
     type : ADD_POST,
     post

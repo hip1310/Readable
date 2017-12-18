@@ -16,28 +16,23 @@ import {Navbar} from 'react-bootstrap/lib'
 
 class App extends Component {
   componentDidMount(){
-    console.log('App Component componenetDidMount')
     this.props.dispatch(fetchAllPosts())
     this.props.dispatch(fetchCategories())
   }
 
   createPost(postContents){
     this.props.dispatch(addNewPost(postContents))
-    console.log('post added')
   }
 
   editPost(id, postContents){
     this.props.dispatch(editAPost(id, postContents))
-    console.log('post edited')
   }
 
   deletePost(id){
     this.props.dispatch(deleteAPost(id))
-    console.log('post deleted')
   }
 
   render() {
-    console.log('App Component render')
     return (
       <div>
         <Navbar className="navbar-expand-lg navbar-dark bg-dark">

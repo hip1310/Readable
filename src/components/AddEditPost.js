@@ -28,13 +28,11 @@ class AddEditPost extends Component{
   }
 
   componentWillMount(){
-    console.log('AddPost componentWillMount')
     this.getCurrPostFromId(this.props)
   }
 
   // This method is used to keep data on the page even on refresh
   componentWillReceiveProps(newProps){
-    console.log('AddPost componentWillReceiveProps')
     this.getCurrPostFromId(newProps)
   }
 
@@ -55,7 +53,6 @@ class AddEditPost extends Component{
   }
 
   render(){
-    console.log('AddPost render()')
     const {categories} = this.props
 
     return(

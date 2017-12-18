@@ -37,8 +37,6 @@ class ListPosts extends Component {
   }
 
   render() {
-    console.log('ListPosts Component render')
-
     const {posts, categories, updateVote, deletePost} = this.props
     let filteredPosts = posts.filter((post) => (!post.deleted))
 
