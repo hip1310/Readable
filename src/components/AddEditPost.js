@@ -68,13 +68,15 @@ class AddEditPost extends Component{
           <FormGroup>
             <ControlLabel>Title</ControlLabel>
             <FormControl type="text" name="title"
-             placeholder="Post Title" value={this.state.title} required
+             placeholder="Post Title" value={this.state.title}
+             pattern="^\S.*$" required title="Title is required"
              onChange={(e) => (this.setState({title : e.target.value}))}/>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Author</ControlLabel>
             <FormControl type="text" name="author"
-              placeholder="Post Author" value={this.state.author} required
+              placeholder="Post Author" value={this.state.author}
+              pattern="^\S.*$" required title="Author is required"
               onChange={(e) => (this.setState({author : e.target.value}))}/>
           </FormGroup>
           <FormGroup>

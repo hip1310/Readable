@@ -167,7 +167,8 @@ class ViewPost extends Component{
               </FormGroup>
               <FormGroup>
                 <FormControl type="text" name="author"
-                 placeholder="Comment Author" required/>
+                 placeholder="Comment Author" required
+                 pattern="^\S.*$" title="Author is required"/>
               </FormGroup>
               <Button type="submit" bsStyle="primary">Submit</Button>
             </Form>
