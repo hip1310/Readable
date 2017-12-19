@@ -4,7 +4,7 @@ A content and comment web app which gives functionality to post content to prede
 
 # Installation
 
-Download or clone the repository.
+Download or clone the repository.  
 Then type `npm install` in the root directory.
   This will install all the dependencies needed to run the program.
 
@@ -12,6 +12,12 @@ Then type `npm install` in the root directory.
 
 type `npm start`
   This will have the app running on localhost:3000
+
+# Starting the back-end API server
+
+Download or fork and clone the [starter server repository](https://github.com/udacity/reactnd-project-readable-starter)  
+Then type `cd api-server` and `npm install` to install all the dependancies  
+Run the server with `node server`
 
 ## Create React App
 
